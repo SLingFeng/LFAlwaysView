@@ -11,13 +11,14 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface LFAlwaysView : UIView
-//切换图片的时间间隔，可选，默认为3s
-@property (nonatomic, assign) CGFloat scrollInterval;
+//切换图片的时间间隔，可选，默认为0.06s
+@property (nonatomic, assign) CGFloat interval;
 
-//切换图片时，运动时间间隔,可选，默认为0.7s
-@property (nonatomic, assign) CGFloat animationInterVale;
+//x 移动的距离,可选，默认为2
+@property (nonatomic, assign) CGFloat moveX;
 
 
+- (void)stopTimer;
 
 @end
 

@@ -24,11 +24,9 @@
 
 @property (nonatomic, strong) NSTimer *timer;
 
-@property (nonatomic, assign) UIViewContentMode imageViewcontentModel;
+@property (nonatomic, retain) NSMutableArray *viewsArray;
 
-@property (nonatomic, strong) NSMutableArray *viewsArray;
-
-@property (nonatomic, strong) NSMutableArray *data;
+@property (nonatomic, retain) NSMutableArray *data;
 
 @end
 
@@ -40,6 +38,9 @@
     if (self) {
         
         self.viewsArray = [NSMutableArray arrayWithCapacity:3];
+        
+        self.interval = 0.06;
+        self.moveX = 2;
         
         UIView *last;
         for (int i=0; i<3; i++) {
@@ -59,13 +60,27 @@
             [self.viewsArray addObject:view];
         }
         
-        self.timer = [NSTimer scheduledTimerWithTimeInterval:0.06 target:self selector:@selector(nextView) userInfo:nil repeats:YES];
+//        self.timer = [NSTimer scheduledTimerWithTimeInterval:self.interval target:self selector:@selector(nextView) userInfo:nil repeats:YES];
         
         self.data = [NSMutableArray arrayWithArray:@[@"1111111111111111111111", @"2222222222222222", @"333333333333333333333333", @"444444444", @"55555555555"]];
 
         
     }
     return self;
+}
+
+- (void)setInterval:(CGFloat)interval {
+    _interval = interval;
+    
+    [self stopTimer];
+    
+    __weak typeof(self) weakSelf = self;
+//        self.timer = [FMWeakTimer scheduledTimerWithTimeInterval:interval target:weakSelf selector:@selector(nextView) userInfo:nil repeats:1];
+
+    self.timer = [NSTimer scheduledTimerWithTimeInterval:interval target:weakSelf selector:@selector(nextView) userInfo:nil repeats:YES];
+
+//    [[NSRunLoop currentRunLoop]addTimer:self.timer forMode:NSDefaultRunLoopMode];//mainRunLoop
+
 }
 
 - (void)setData:(NSMutableArray *)data {
@@ -90,7 +105,7 @@
 
         
         CGRect rect = v.frame;
-        rect.origin.x = rect.origin.x - 9;
+        rect.origin.x = rect.origin.x - self.moveX;
         v.frame = rect;
         
         if (v.frame.origin.x < (- self.frame.size.width)) {
@@ -121,6 +136,20 @@
     }
     
     NSLog(@"%d", self.nextPage);
+}
+
+
+
+- (void)dealloc {
+    [self stopTimer];
+}
+
+- (void)stopTimer {
+    self.timer.fireDate = [NSDate distantFuture];
+    if (_timer.isValid) {
+        [self.timer invalidate];
+        self.timer = nil;
+    }
 }
 
 @end

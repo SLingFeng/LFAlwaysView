@@ -10,7 +10,9 @@
 #import "LFAlwaysView.h"
 
 @interface ViewController ()
-
+{
+    LFAlwaysView *_v;
+}
 @end
 
 @implementation ViewController
@@ -20,8 +22,18 @@
 
     LFAlwaysView *v = [[LFAlwaysView alloc] initWithFrame:CGRectMake(0, 200, self.view.frame.size.width, 200)];
     [self.view addSubview:v];
+    _v = v;
     
-    
+}
+
+- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    [_v stopTimer];
+    [_v removeFromSuperview];
+    _v = nil;
+//    _v = nil;
+//    for (UIView *v in self.view.subviews ) {
+//        [v removeFromSuperview];
+//    }
 }
 
 
