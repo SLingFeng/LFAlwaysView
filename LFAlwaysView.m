@@ -46,7 +46,6 @@
         for (int i=0; i<3; i++) {
             UILabel *view = [[UILabel alloc] init];
             [self addSubview:view];
-//            view.text = [NSString stringWithFormat:@"adhsadjagshj++++%d+sdfhhhghghgh", i];
             view.layer.borderWidth = 10;
             view.layer.borderColor = [UIColor blackColor].CGColor;
             view.backgroundColor = [UIColor redColor];
@@ -60,7 +59,6 @@
             [self.viewsArray addObject:view];
         }
         
-//        self.timer = [NSTimer scheduledTimerWithTimeInterval:self.interval target:self selector:@selector(nextView) userInfo:nil repeats:YES];
         
         self.data = [NSMutableArray arrayWithArray:@[@"1111111111111111111111", @"2222222222222222", @"333333333333333333333333", @"444444444", @"55555555555"]];
 
@@ -75,11 +73,10 @@
     [self stopTimer];
     
     __weak typeof(self) weakSelf = self;
-//        self.timer = [FMWeakTimer scheduledTimerWithTimeInterval:interval target:weakSelf selector:@selector(nextView) userInfo:nil repeats:1];
 
     self.timer = [NSTimer scheduledTimerWithTimeInterval:interval target:weakSelf selector:@selector(nextView) userInfo:nil repeats:YES];
 
-//    [[NSRunLoop currentRunLoop]addTimer:self.timer forMode:NSDefaultRunLoopMode];//mainRunLoop
+    [[NSRunLoop currentRunLoop]addTimer:self.timer forMode:NSRunLoopCommonModes];//mainRunLoop
 
 }
 
@@ -90,8 +87,15 @@
         
         v.text = self.data[i];
     }
-    self.nextPage = 2;
-    
+
+    if (_data.count > 1) {
+        self.nextPage = 1;
+        self.moveX = 20;
+        self.interval = 0.06;
+    }
+    if (_data.count > 2) {
+        self.nextPage = 2;
+    }
 }
 
 - (void)nextView {
@@ -123,15 +127,15 @@
         [self.viewsArray removeObject:view];
         [self.viewsArray addObject:view];
         
-        if (self.nextPage == self.data.count - 1) {
-            self.nextPage = 0;
-
-        }else {
-            self.nextPage ++;
-
-        }
         view.text = self.data[self.nextPage];
 
+        if (self.nextPage + 1 >= self.data.count) {
+            self.nextPage = 0;
+            
+        }else {
+            self.nextPage ++;
+            
+        }
         
     }
     
